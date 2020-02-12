@@ -12,7 +12,7 @@ function createInfo
         for ii = 1:numel(a)
             path1 = [a(ii).folder filesep a(ii).name filesep];
             disp(path1)
-            load(namemat(1), 'x');
+            load(nameMat(ii), 'x');
             matInfo.freq = freq;
             matInfo.Lx = Lx;
             matInfo.Ly = Ly;

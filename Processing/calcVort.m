@@ -7,7 +7,7 @@ function frameO = calcVort(frame, num)
     for ii = num
         [omega, cav] = curl(frame.px{ii}, frame.py{ii}, frame.vx{ii}, frame.vy{ii});
 
-        omega(find(isnan(omega))) = 0;
+%         omega(find(isnan(omega))) = 0;
 
         frameO.omega{ii} = omega;
         frameO.px{ii} = px;
