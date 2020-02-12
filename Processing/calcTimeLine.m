@@ -6,7 +6,7 @@ for ii = 1:numelInfoMat()
     disp(ii)
     frame = loadMat(ii);
     frameOmega = calcVort(frame);
-    for num = genNumFrame(frame, timeStep, timeWindow);
+    for num = genFrameNum(frame, timeStep, timeWindow);
         kk = kk + 1;
         num = num{1};
         omega = cat(3, frameOmega.omega{num});
