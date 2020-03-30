@@ -8,6 +8,9 @@ name = -1;
 if(numel(a)>=num)
     path1 = [a(num).name '/'];
     b = dir([pathm path1 'MVI*.mat']); 
+    if isempty(b)
+        b = dir([pathm path1 'cam*.mat']); 
+    end
     if(numel(b)>=nn)
         name = [pathm path1 b(nn).name];
     end
