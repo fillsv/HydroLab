@@ -11,6 +11,9 @@ if(numel(a)>=num)
     if isempty(b)
         b = dir([pathm path1 'cam*.mat']); 
     end
+    if isempty(b)
+        b = dir([pathm path1 'tif*.mat']); 
+    end
     if(numel(b)>=nn)
         name = [pathm path1 b(nn).name];
     end

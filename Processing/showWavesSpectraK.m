@@ -1,4 +1,4 @@
-function [vsp nyu] = showWavesSpectra(frame, padFactor, num)
+function [vsp nyu] = showWavesSpectraK(frame, padFactor, num)
     %
     if exist('padFactor', 'var')==0 
         padFactor = 4;
@@ -13,14 +13,17 @@ function [vsp nyu] = showWavesSpectra(frame, padFactor, num)
 
         end
     end    
-    vsp = frame.vsp;
+%     vsp = abs(frame.vsp./frame.coef);
+    vsp = frame.vsp./frame.coef;
     nyu = frame.nyu;
-    plot(frame.nyu, frame.vsp);
+%     k = disper(frame.nyu, frame.sigma);
+%     coef = (frame.n-1)/frame.n*frame.h*k;
+    plot(frame.nyu, vsp);
 %     plot(frame.nyu, frame.vsp./disper(frame.nyu)', 'b');
     xlabel('Frequency, Hz');
     ylabel('RMS velocity, cm/s');
 
     xlim([min(frame.nyu) max(frame.nyu)])
-    ylim([min(frame.vsp)/1.1 max(frame.vsp)*1.1])
+    ylim([min(vsp)/1.1 max(vsp)*1.1])
     set(gcf, 'PaperPosition', [0 0 17 10]);
 end

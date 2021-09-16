@@ -1,5 +1,6 @@
 clear tl
 cd /media/fill/Exp/bunkerlqc/mat/Exppool/BigVortexDepth
+
 b = dir(); b = b(3:end); b = b([b.isdir]);
 b  = selectNReg(b, '10cm');
 b  = selectNReg(b, 'DeepWater_19cm');
@@ -33,7 +34,7 @@ for oo = 1:numel(b)
                 tl.k(kk, ll, :) = frEk.k;
                 tl.Ebig(kk, ll) = mean(frEk.Ek(find(frEk.k<.2)));
                 tl.kmax(kk, ll) = frEk.k(find(max(frEk.Ek)==frEk.Ek));
-                tl.Epump(kk, ll) = mean(frEk.Ek(find((frEk.k>.4)&(frEk.k<2))));
+                tl.Epump(kk, ll) = mean(frEk.Ek(find((frEk.k>.3)&(frEk.k<3.5))));
             end            
             fprintf('\n')
 

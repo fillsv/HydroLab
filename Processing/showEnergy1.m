@@ -1,5 +1,9 @@
 function showEnergy1(frameEnergy, maxk, padFactor,  num)
-%     frameEnergy
+%     
+    if ~exist('frameEnergy', 'var')
+        disp('function showEnergy1(frameEnergy, maxk, padFactor,  num)');
+        return
+    end
     if exist('padFactor', 'var')==0 
         num = 1:numel(frameEnergy.E);
     end 

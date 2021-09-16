@@ -1,7 +1,7 @@
-function frame = showVort(frame, num)
+function frame = showVortG(frame, num)
     cutoff_percent = 0.01;
     if exist('frame', 'var')==0 
-        disp('function frame = showVort(frame, num)');
+        disp('function frame = showVortG(frame, num)');
         return
     end
     if ~isfield(frame, 'omega')
@@ -25,7 +25,9 @@ function frame = showVort(frame, num)
     px = px - mean(px(:));
     py = py - mean(py(:));    
     omega = cat(3, frame.omega{num});
-    omega = nanmean(omega, 3);    
+    omega = nanmean(omega, 3);
+    sigma = 2;
+    omega = imgaussfilt(omega, sigma, 'padding', 'symmetric');    
 %     omega = abs(omega);
     pr_right = 14;
     pr_top = 12;  
@@ -48,4 +50,5 @@ function frame = showVort(frame, num)
 %     caxis([0 xboundary(1)] );
     colorbar( 'fontsize', 15);
     set(gcf, 'PaperPosition', [0, 0, pr_right, pr_top]);
+
 

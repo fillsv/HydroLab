@@ -1,5 +1,8 @@
 function showWaves(frame, nyuCrop, num)
-    
+    if ~exist('frame', 'var')
+        disp('function showWaves(frame, nyuCrop, num)');
+        return
+    end
     cutoff_percent = 0.002;
     if ~isfield(frame, 'vox')
         if isfield(frame, 'vx')

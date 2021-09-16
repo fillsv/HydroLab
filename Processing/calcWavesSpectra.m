@@ -35,34 +35,23 @@ function frameWavesSpectra = calcWavesSpectra(frame, padFactor, num)
     vx = permute(vx, [3 1 2]);
     vy = permute(vy, [3 1 2]);
     
-%     w = repmat(hann(size(vx,1)), [1 size(vx,2) size(vx,3)]);
-    
     vx(find(isnan(vx))) = 0;
     vy(find(isnan(vy))) = 0;
     
-%     pp = 1 + nyuCrop./frame.freq*numel(num);
-
-%     k = disper(nyuCrop, sigma, rho, g, h);
-
-%     w23 = hann(size(vx, 2))*hann(size(vx,3))'; 
-%     w1 = hann(size(vx,1));
-%     w = repmat(w1, [1, size(vx,2), size(vx,3)]);
     d = 9.4+1.48/1.33;
     n = 1.33;
-%     padFac 
-    padFactorTime = 4;
+
+    padFactorTime = 2;
     dnu = 1/numel(num)*freq/padFactorTime;
     nyu = (0:numel(num)*padFactorTime/2-1)*dnu;
 
     k = [0 disper(nyu(2:end))];
     k = k';
 
-%     max(nyu)
     w23 = hann(size(vx, 2))*hann(size(vx,3))'; 
     w1 = hann(size(vx,1));
     w = permute(w23.*permute(w1,[3,2,1]),[3 1 2]);
-%     size(w)
-%     size(nu)
+
     fvx = fftn(vx.*w, [padFactorTime*size(vx,1), padFactor*size(vx,2), padFactor*size(vx,3)]);
     fvx = fvx/sqrt(mean(w23(:).^2))/mean(w1);
     fvx = abs(fftshift(fftshift(fvx, 2), 3));
@@ -79,26 +68,8 @@ function frameWavesSpectra = calcWavesSpectra(frame, padFactor, num)
     stept = round(padFactorTime*0);
     for ii = 1+stept:numel(nyu)-stept
         ind = find((abs(abs(kx+i*ky)-k(ii)))<dk);
-%         indx = find((abs(abs(kx+i*ky-k(ii)))<dk)|(abs(abs(kx+i*ky+k(ii)))<dk));
-%         indy = find((abs(abs(kx+i*ky-i*k(ii)))<dk)|(abs(abs(kx+i*ky+i*k(ii)))<dk));
-%         tmp(ii) = numel(indx);
-%         if(nyu(ii)==3)
-% %             fu = fv;
-%             fu1 = fu;
-%             fu1(ii, indx) = fu1(ii,indx)*0;
-%             surf(kx, ky,squeeze(fu(ii,:,:)+fu1(ii,:,:)), 'linestyle', 'none');
-%             view(2)
-%             caxis([-max(max(squeeze(fu(ii,:,:))))*0 max(max(squeeze(fu(ii,:,:))))])
-%             [fup, fukx, fuky] = findPeak(squeeze(fu(ii, :, :)), kx, ky, 0, 0, 5,5);
-%             disp([fukx, fuky])
-%             [fvp, fvkx, fvky] = findPeak(squeeze(fv(ii, :, :)), kx, ky, 0, 0, 5,5);            
-%             disp([fvkx, fvky])
-%             clear all
-%             error('1')
-%         end
-%         Au(ii) = sqrt(sum(sum(fvx(ii-stept:ii+stept,indx).^2,2)/numel(fvx)/numelo));
         Av(ii) = sqrt(sum(sum(fv(ii-stept:ii+stept,ind).^2,2)/numel(fv)/numelo));        
-        
+       
     end
   
 %     plot(tmp) 
@@ -112,7 +83,11 @@ function frameWavesSpectra = calcWavesSpectra(frame, padFactor, num)
 %     spy = Av';
     Av = Av*sqrt(2); %becouse of normal fft of time
     frameWavesSpectra.vsp = Av';%(spx.^2+spy.^2).^.5;    
-    
+    if isnan(frame.sigma) frame.sigma = 73; end
+    k = disper(nyu, frame.sigma)';
+    coef = (frame.n-1)/frame.n*frame.h*k;
+    frameWavesSpectra.k = k;
+    frameWavesSpectra.coef = coef;
     
     frameWavesSpectra.nyu =nyu;
     

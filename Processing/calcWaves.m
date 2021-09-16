@@ -1,4 +1,8 @@
 function frameWaves = calcWaves(frame, padFactor, nyuCrop, num)
+    if ~exist('frame', 'var')
+        disp('frameWaves = calcWaves(frame, padFactor, nyuCrop, num)');
+        return
+    end
     if exist('num', 'var')==0 
         num = 1:numel(frame.px);
     end    
@@ -44,7 +48,6 @@ function frameWaves = calcWaves(frame, padFactor, nyuCrop, num)
     pp = 1 + nyuCrop./frame.freq*numel(num);
 
 %     k = disper(nyuCrop, sigma, rho, g, h);
-
     w23 = hann(size(vx, 2))*hann(size(vx,3))'; 
     w1 = hann(size(vx,1));
     w = repmat(w1, [1, size(vx,2), size(vx,3)]);
@@ -53,15 +56,13 @@ function frameWaves = calcWaves(frame, padFactor, nyuCrop, num)
 
     vox = 2*squeeze(vox);
     voy = 2*squeeze(voy);    
-%     voxy = abs(vox).*abs(voy);
-    voxy = abs((abs(vox)+i*abs(voy)).^2);
-   % voxy = voxy - mean(voxy);
 
+    voxy = abs((abs(vox)+i*abs(voy)).^2);
     fft2voxy = fft2(voxy.*w23, padFactor*size(vx,2), padFactor*size(vx,3));
     fft2voxy = fft2voxy/mean(w23(:));
     fft2voxy = fftshift(fft2voxy);
     fft2voxy = fft2voxy/size(vx,2)/size(vx,3);
-
+    
     fft2vox = fft2(vox.*w23, padFactor*size(vx,2), padFactor*size(vx,3));
     fft2vox = fft2vox/mean(w23(:));
     fft2vox = fftshift(fft2vox);
@@ -70,9 +71,6 @@ function frameWaves = calcWaves(frame, padFactor, nyuCrop, num)
     fft2voy = fft2voy/mean(w23(:));
     fft2voy = fftshift(fft2voy);
     fft2voy = fft2voy/numel(vy);    
-    
-%     fft2ox = fft2ox;%/(k(pp)*d*(n-1)/n);%squeeze(fu(pp,:,:));
-%     fft2oy = fft2oy;%/(k(pp)*d*(n-1)/n);%squeeze(fv(pp,:,:));    
 
     frameWaves.fft2voxy = fft2voxy;
     frameWaves.fft2vox = fft2vox;

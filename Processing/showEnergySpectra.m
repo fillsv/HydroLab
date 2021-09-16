@@ -1,5 +1,9 @@
-function showEnergySpectr(frame, padFactor, num)
+function showEnergySpectra(frame, padFactor, num)
     %
+    if ~exist('frame', 'var')
+        disp('showEnergySpectra(frame, padFactor, num)');
+        return
+    end
     if exist('padFactor', 'var')==0 
         padFactor = 4;
     end 

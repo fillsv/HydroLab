@@ -20,14 +20,16 @@ function frameEnergySpectra = calcEnergySpectra(frame, num)
     dkx = kx(1,2)-kx(1,1);
     dky = ky(2,1)-ky(1,1);
     numk = floor(kmax/kstep);
-    k = ((1:numk)-.5)*kstep;
+%     k = ((1:numk)-.5)*kstep;
     Ek = zeros(numk,1);
     num_step = 2*pi*numel(kr)/(numk^2+numk)/4;
 
     for ii = 1:numk
         in = k_ind(round(num_step*ii*(ii-1)/2+1):round(num_step*ii*(ii+1)/2));
 
-       Ek(ii) = 1/2/Lx/Ly/kstep*sum(abs(2*E(in)))*dkx*dky; % intergal!
+        Ek(ii) = 1/2/Lx/Ly/kstep*sum(abs(2*E(in)))*dkx*dky; % intergal!
+        k(ii) = mean(kr(in));
+    
     end
     frameEnergySpectra.Ek = Ek;
     frameEnergySpectra.k = k';

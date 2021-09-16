@@ -10,22 +10,17 @@ function frame = importMat(x,y,u,v,matInfo, tv, num)
     py = py - py(1, 1) + (py(2, 1) - py(1, 1));
     maxpx = max(px(:));
     maxpy = max(py(:));
-    filterLimit = 6;
+    filterLimit = 10;
     px = px*Lx/maxpx;
     py = py*Ly/maxpy;
     if(exist('num', 'var') == 0)
         num = 1:numel(x);
     end
     ii = 0;
-%     matInfo
-    if ~isfield(matInfo, 'h') matInfo.h = NaN; end
-    if ~isfield(matInfo, 'n') matInfo.n = NaN; end
-    if ~isfield(matInfo, 'sigma') matInfo.sigma = NaN; end
 %     vx = cat(3, u{1:numel(u)});
 %     vy = cat(3, v{1:numel(v)});
-%     num = 1:500;
+
     for kk = num
-%         disp(kk)
         ii = ii +1;
         vx = u{kk};
         vy = v{kk};
@@ -44,8 +39,7 @@ function frame = importMat(x,y,u,v,matInfo, tv, num)
             vy(f5) = NaN;
         end
 % tic
-%           [vx vy] = filterV(vx,vy,3);
-%           [vx vy] = filterV(vx,vy,3);
+%          [vx vy] = filterV(vx,vy,10);
 %          [vx vy] = filterV(vx,vy,filterLimit);
 % toc
         vx = vx*Lx/maxpx/dt;
@@ -59,6 +53,4 @@ function frame = importMat(x,y,u,v,matInfo, tv, num)
     frame.freq = freq;
     frame.Lx = Lx;
     frame.Ly = Ly;
-    frame.h = matInfo.h;
-    frame.n = matInfo.n;
-    frame.sigma = matInfo.sigma;
+

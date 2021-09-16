@@ -1,4 +1,10 @@
-function frameFFTVort = calcFFTVort(frame, padFactor, num)
+function frameFFTVort = calcVortFFT(frame, padFactor, num)
+
+    if ~exist('frame', 'var')
+        disp('function frameVortFFT = calcFFTVort(frame, padFactor, num)');
+        return
+    end
+    
     if exist('num', 'var')==0 
         num = 1:numel(frame.px);
     end    

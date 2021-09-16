@@ -1,4 +1,8 @@
 function showFFTVort(frame, maxk, padFactor, num)
+    if ~exist('frame', 'var')
+        disp('function showFFTVort(frame, maxk, padFactor, num)');
+        return
+    end
     if exist('padFactor', 'var')==0 
         padFactor = 4;
     end 

@@ -37,6 +37,6 @@ function showDisper(frame, maxk, padFactor, nyuCrop, kstep, num)
     colorbar( 'fontsize', 20);
     xlim([min(newnyu(:)) max(newnyu(:))]);
     ylim([min(newk(:)) max(newk(:))]);   
-    xlabel('nyu, Hz', 'fontsize', 20);
+    xlabel('Freq, Hz', 'fontsize', 20);
     ylabel('k, cm^{-1}', 'fontsize', 20);
         
