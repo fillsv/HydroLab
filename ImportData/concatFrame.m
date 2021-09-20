@@ -3,6 +3,14 @@ function frame1 = concatFrame(frame1, frame2)
         disp('frame = concatFrame(frame1, frame2)');
         return
     end
+    if isempty(frame1)
+        frame1 = frame2;
+        return;
+    end
+    if isempty(frame2)
+        return;
+    end
+    
     for ii = 1:numel(frame2.px)
         frame1.px{end+1,1} = frame2.px{ii};
         frame1.py{end+1,1} = frame2.py{ii};
