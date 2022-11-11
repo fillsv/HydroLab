@@ -17,9 +17,9 @@ function showWavesFFT(frame, maxk, padFactor, nyuCrop, num)
     end
 
 
-    if exist('num', 'var')==0 
-        num = 1:numel(frame.fft2vox);
-    end 
+%     if exist('num', 'var')==0 
+%         num = 1:numel(frame.fft2vox);
+%     end 
 
     if exist('maxk', 'var')==0 
         maxk = 2;

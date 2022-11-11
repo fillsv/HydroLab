@@ -7,8 +7,8 @@ a = a(find([a.isdir]));
 name = -1;
 if(numel(a)>=num)
     path1 = [a(num).name '/'];
-    b = dir([pathm path1 'matInfo*.mat']); 
-    if numel(b)
+    b = dir([pathm path1 'matInfo*.mat']);
+    if numel(b) >= nn
         name = [pathm path1 b(nn).name];
     end
 end

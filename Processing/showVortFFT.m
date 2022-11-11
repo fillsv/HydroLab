@@ -6,22 +6,27 @@ function showFFTVort(frame, maxk, padFactor, num)
     if exist('padFactor', 'var')==0 
         padFactor = 4;
     end 
+    if ~isfield(frame, 'omega')
+         frame = calcVort(frame, num);
+         num = 1:numel(num);
+    end
 
     if ~isfield(frame, 'vox')
-        if isfield(frame, 'vx')
+        if isfield(frame, 'vx')|| isfield(frame, 'omega')
             if exist('num', 'var')==0 
-                num = 1:numel(frame.vx);
+                num = 1:numel(frame.px);
             end 
             frame = calcVortFFT(frame, padFactor, num);
+            num = 1:numel(num);
         else
             warning('frame is incorrect!')
             return
         end
     end
 
-    if exist('num', 'var')==0 
-        num = 1:numel(frame.fomega);
-    end 
+%     if exist('num', 'var')==0 
+%         num = 1:numel(frame.fomega);
+%     end 
 
     if exist('maxk', 'var')==0 
         maxk = 2;
@@ -30,7 +35,7 @@ function showFFTVort(frame, maxk, padFactor, num)
     kx = frame.kx;
     ky = frame.ky;
     
-    rez = cat(3, frame.fomega{:});
+    rez = cat(3, frame.fomega{num});
     rez = abs(mean(rez, 3));
 
     ixy = find(abs(kx)<maxk & abs(ky)<maxk);

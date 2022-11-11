@@ -1,4 +1,4 @@
-function showEnergySpectra(frame, padFactor, num)
+function showEnergySpectra(frame, padFactor, num, color)
     %
     if ~exist('frame', 'var')
         disp('showEnergySpectra(frame, padFactor, num)');
@@ -27,8 +27,11 @@ function showEnergySpectra(frame, padFactor, num)
         warning('frame is incorrect!')
         return
     end
+    if exist('color', 'var')==0 
+        color = 'b';
+    end
     
-    p = loglog(frame.k, frame.Ek, 'b');
+    p = loglog(frame.k, frame.Ek, color);
     xlabel('Wave vector, cm^{-1}');
     ylabel('Energy spectrum, cm^3/s^2');
 

@@ -1,0 +1,626 @@
+function [res] = filterResults(res, filterLimit)
+    return
+    if ~exist('filterLimit', 'var')
+        filterLimit = 10;
+    end
+    absv = abs(res.u{1}+1i*res.v{1});
+%     ind = find(absv>50);
+%     res.v{1}(ind) = NaN;
+%     res.u{1}(ind) = NaN;
+%     if numel(find(isnan(res.u{1})))>0
+%         res.u{1} = single(inpaint_nans(double(res.u{1}), 4));
+%         res.v{1} = single(inpaint_nans(double(res.v{1}), 4));
+%     end
+    for ii = 2:numel(res.x)
+%         for kk = 1:10
+%             disp([ii kk])
+        dcx = diff(res.x{ii}(1,1:2));
+        dcy = diff(res.y{ii}(1:2,1));
+        dpx = diff(res.x{ii-1}(1,1:2));
+        dpy = diff(res.y{ii-1}(1:2,1));
+        cv = res.v{ii};
+        cu = res.u{ii};
+        cx = res.x{ii}-dcx*2;
+        cy = res.y{ii}-dcy*2;
+        px = res.x{ii-1}-dpx*2;
+        py = res.y{ii-1}-dpy*2;
+%         dv = diff(cv);
+%         du = diff(cu')';
+        nanind = find(isnan(cv));
+%         size(find(ind))
+%         ind = ind(:);
+    
+        pu = interp2(px,py,res.u{ii-1},cx,cy,'linear');
+        pv = interp2(px,py,res.v{ii-1},cx,cy,'linear');
+        filtWidth = 7;
+        filtSigma = 5;
+        imageFilter=fspecial('gaussian',filtWidth,filtSigma);
+        pu = nanconv(pu, imageFilter, 'nanout');
+        pv = nanconv(pv, imageFilter, 'nanout');
+
+%         ind = ~(isnan(pu)|isnan(pv));
+%         size(find(isnan(res.u{ii-1})))
+%         ii
+%         Fu = scatteredInterpolant(double(cx(ind)),double(cy(ind)),double(pu(ind)));
+%         cu(nanind) = Fu(double(cx(nanind)),double(cy(nanind)));
+
+%         cu(nanind) = single(griddata(double(cx(ind)),double(cy(ind)),double(pu(ind)),double(cx(nanind)),double(cy(nanind))));
+%         cv(nanind) = single(griddata(double(cx(ind)),double(cy(ind)),double(pv(ind)),double(cx(nanind)),double(cy(nanind))));
+%         numel(find(ind))
+        if numel(nanind)>0% && numel(find(ind))>0
+%             try
+%             cu(nanind) = interp2(px,py,res.u{ii-1},cx(nanind),cy(nanind),'*spline');
+%             cv(nanind) = interp2(px,py,res.v{ii-1},cx(nanind),cy(nanind),'*spline');
+% %             cu(nanind) = interp2(cx(ind),cy(ind),pu(ind),cx(nanind),cy(nanind),'*spline');
+% %             cv(nanind) = interp2(cx(ind),cy(ind),pv(ind),cx(nanind),cy(nanind),'*spline');
+%             catch
+%                 cu(nanind) = single(griddata(double(cx(ind)),double(cy(ind)),double(pu(ind)),double(cx(nanind)),double(cy(nanind))));
+%                 cv(nanind) = single(griddata(double(cx(ind)),double(cy(ind)),double(pv(ind)),double(cx(nanind)),double(cy(nanind))));
+%             end
+            cu(nanind) = pu(nanind);
+            cv(nanind) = pv(nanind);
+        end
+%         tu = cu;
+%         tu(isnan(tu))==0;
+%         tv(isnan(tv))==0;        
+%         tu = imgaussfilt(tu, 5);
+%         tv = imgaussfilt(tv, 5);
+
+        filtWidth = 7;
+        filtSigma = 5;
+        imageFilter=fspecial('gaussian',filtWidth,filtSigma);
+        tu = nanconv(cu, imageFilter, 'nanout');
+        tv = nanconv(cv, imageFilter, 'nanout');
+        du = tu - cu;
+        dv = tv - cv;
+        
+        d_vel = abs(du+1i*dv);
+        vel = abs(tu+1i*tv);
+%         if ii == 4; 
+%             disp(4)
+%         end
+       
+%         ind = find(abs(du)> nanmean(abs(du(:)))*filterLimit);
+%         cu(ind) = pu(ind);
+%         cv(ind) = pv(ind);
+%         ind = find(abs(dv)> nanmean(abs(dv(:)))*filterLimit);
+%         cu(ind) = pu(ind);
+%         cv(ind) = pv(ind);
+%         ind = find(abs(d_vel)> nanmean(abs(vel(:)))*filterLimit);
+        ind = find(abs(d_vel)> filterLimit);
+        cu(ind) = pu(ind);
+        cv(ind) = pv(ind);
+
+%         absv = abs(cu+i*cv);
+%         dv = diff(absv);
+%         dv1 = diff(absv')';
+% %         ind = find(absv(:)>nanmean(absv(:))*filterLimit*5);
+%         [indy indx] = find(abs(dv)>nanmean(abs(dv))*filterLimit);
+%         ind = (indx-1)*size(cu,1)+indy;
+%         cu(ind) = pu(ind);
+%         cv(ind) = pv(ind);
+%         [indy indx] = find(abs(dv1)>nanmean(abs(dv1))*filterLimit);
+%         ind = indx*size(cu,1)+indy-1;
+%         cu(ind) = pu(ind);
+%         cv(ind) = pv(ind);
+%     
+        
+        
+%         [indy indx] = find(abs(du)>nanmean(abs(du), 'all')*filterLimit);
+%         ind = (indx-1)*size(cv,1)+indy;
+%         cu(ind) = NaN;
+%         cv(ind) = NaN;
+%         [indy indx] = find(abs(dv)>nanmean(abs(dv), 'all')*filterLimit);
+%         ind = (indx-1)*size(cu,1)+indy;
+%         cu(ind) = NaN;
+%         cv(ind) = NaN;
+%         nanind = find(isnan(cv));
+%         cu(nanind) = interp2(res.x{ii-1},res.y{ii-1},res.u{ii-1},cx(nanind),cy(nanind),'*spline');
+%         cv(nanind) = interp2(res.x{ii-1},res.y{ii-1},res.v{ii-1},cx(nanind),cy(nanind),'*spline');
+%         surf(cx, cy, cv, 'linestyle', 'none'); view(2); caxis([-1 1]*20)
+%         ind = find(isnan(pu));
+%         cu(ind) = NaN;
+%         cv(ind) = NaN;
+%         if numel(find(isnan(cu)))>0
+%             cu = single(inpaint_nans(double(cu), 4));
+%             cv = single(inpaint_nans(double(cv), 4));
+%         end
+        res.u{ii} = cu;
+        res.v{ii} = cv;
+%         end
+    end
+%     [indy indx] = find(abs(dv)>nanmean(abs(dv))*filterLimit);
+%    [indy indx] = find(abs(absv)>nanmean(abs(absv))*filterLimit);
+%     ind = find(absv(:)>nanmean(absv(:))*filterLimit);
+%      v(ind) = NaN;
+%     vy(ind) = NaN;
+%     [indy indx] = find(abs(dv1)>nanmean(abs(dv1))*filterLimit);
+%    [indy indx] = find(abs(absv)>nanmean(abs(absv))*filterLimit);
+%     ind = find(absv(:)>nanmean(absv(:))*filterLimit);
+% %    ind = indx*size(vx,1)+indy-1;
+%     vx(ind) = NaN;
+%     vy(ind) = NaN;
+% 
+% %     absv = abs(vx+i*vy);
+% %      surf(absv,'linestyle','none'); view(2)
+% %      pause(1)
+% %     [ind] = find(abs(absv(:))>nanmean(abs(absv(:)))*filterLimit);
+% %     ind = (indx-1)*size(vx,1)+indy;
+% %     vx(ind) = NaN;
+% %     vy(ind) = NaN;
+% %     absv = abs(vx+i*vy);
+% %     dv = absv;
+% %     [indy indx] = find(abs(dv)>nanmean(abs(dv(:)))*filterLimit);
+% %     ind = (indx-1)*size(vx,1)+indy;
+% %     vx(ind) = NaN;
+% %     vy(ind) = NaN;
+% 
+% %     surf(absv,'linestyle','none'); view(2)
+% %     pause(1)
+% %    tic
+%     vx = inpaint_nans(double(vx), 4);
+%     vy = inpaint_nans(double(vy), 4);
+%     toc
+%      absv = abs(vx+i*vy);
+%      surf((absv),'linestyle','none'); view(2)
+
+end
+
+function B = inpaint_nans(A,method)
+
+% Author: John D'Errico
+% e-mail address: woodchips@rochester.rr.com
+% Release: 2
+% Release date: 4/15/06
+
+% INPAINT_NANS: in-paints over nans in an array
+% usage: B=INPAINT_NANS(A)          % default method
+% usage: B=INPAINT_NANS(A,method)   % specify method used
+%
+% Solves approximation to one of several pdes to
+% interpolate and extrapolate holes in an array
+%
+% arguments (input):
+%   A - nxm array with some NaNs to be filled in
+%
+%   method - (OPTIONAL) scalar numeric flag - specifies
+%       which approach (or physical metaphor to use
+%       for the interpolation.) All methods are capable
+%       of extrapolation, some are better than others.
+%       There are also speed differences, as well as
+%       accuracy differences for smooth surfaces.
+%
+%       methods {0,1,2} use a simple plate metaphor.
+%       method  3 uses a better plate equation,
+%                 but may be much slower and uses
+%                 more memory.
+%       method  4 uses a spring metaphor.
+%       method  5 is an 8 neighbor average, with no
+%                 rationale behind it compared to the
+%                 other methods. I do not recommend
+%                 its use.
+%
+%       method == 0 --> (DEFAULT) see method 1, but
+%         this method does not build as large of a
+%         linear system in the case of only a few
+%         NaNs in a large array.
+%         Extrapolation behavior is linear.
+%         
+%       method == 1 --> simple approach, applies del^2
+%         over the entire array, then drops those parts
+%         of the array which do not have any contact with
+%         NaNs. Uses a least squares approach, but it
+%         does not modify known values.
+%         In the case of small arrays, this method is
+%         quite fast as it does very little extra work.
+%         Extrapolation behavior is linear.
+%         
+%       method == 2 --> uses del^2, but solving a direct
+%         linear system of equations for nan elements.
+%         This method will be the fastest possible for
+%         large systems since it uses the sparsest
+%         possible system of equations. Not a least
+%         squares approach, so it may be least robust
+%         to noise on the boundaries of any holes.
+%         This method will also be least able to
+%         interpolate accurately for smooth surfaces.
+%         Extrapolation behavior is linear.
+%         
+%       method == 3 --+ See method 0, but uses del^4 for
+%         the interpolating operator. This may result
+%         in more accurate interpolations, at some cost
+%         in speed.
+%         
+%       method == 4 --+ Uses a spring metaphor. Assumes
+%         springs (with a nominal length of zero)
+%         connect each node with every neighbor
+%         (horizontally, vertically and diagonally)
+%         Since each node tries to be like its neighbors,
+%         extrapolation is as a constant function where
+%         this is consistent with the neighboring nodes.
+%
+%       method == 5 --+ See method 2, but use an average
+%         of the 8 nearest neighbors to any element.
+%         This method is NOT recommended for use.
+%
+%
+% arguments (output):
+%   B - nxm array with NaNs replaced
+%
+%
+% Example:
+%  [x,y] = meshgrid(0:.01:1);
+%  z0 = exp(x+y);
+%  znan = z0;
+%  znan(20:50,40:70) = NaN;
+%  znan(30:90,5:10) = NaN;
+%  znan(70:75,40:90) = NaN;
+%
+%  z = inpaint_nans(znan);
+%
+%
+% See also: griddata, interp1
+%
+% Author: John D'Errico
+% e-mail address: woodchips@rochester.rr.com
+% Release: 2
+% Release date: 4/15/06
+
+
+% I always need to know which elements are NaN,
+% and what size the array is for any method
+[n,m]=size(A);
+A=A(:);
+nm=n*m;
+k=isnan(A(:));
+
+% list the nodes which are known, and which will
+% be interpolated
+nan_list=find(k);
+known_list=find(~k);
+
+% how many nans overall
+nan_count=length(nan_list);
+
+% convert NaN indices to (r,c) form
+% nan_list==find(k) are the unrolled (linear) indices
+% (row,column) form
+[nr,nc]=ind2sub([n,m],nan_list);
+
+% both forms of index in one array:
+% column 1 == unrolled index
+% column 2 == row index
+% column 3 == column index
+nan_list=[nan_list,nr,nc];
+
+% supply default method
+if (nargin<2) || isempty(method)
+  method = 0;
+elseif ~ismember(method,0:5)
+  error 'If supplied, method must be one of: {0,1,2,3,4,5}.'
+end
+
+% for different methods
+switch method
+ case 0
+  % The same as method == 1, except only work on those
+  % elements which are NaN, or at least touch a NaN.
+  
+  % horizontal and vertical neighbors only
+  talks_to = [-1 0;0 -1;1 0;0 1];
+  neighbors_list=identify_neighbors(n,m,nan_list,talks_to);
+  
+  % list of all nodes we have identified
+  all_list=[nan_list;neighbors_list];
+  
+  % generate sparse array with second partials on row
+  % variable for each element in either list, but only
+  % for those nodes which have a row index > 1 or < n
+  L = find((all_list(:,2) > 1) & (all_list(:,2) < n)); 
+  nl=length(L);
+  if nl>0
+    fda=sparse(repmat(all_list(L,1),1,3), ...
+      repmat(all_list(L,1),1,3)+repmat([-1 0 1],nl,1), ...
+      repmat([1 -2 1],nl,1),nm,nm);
+  else
+    fda=spalloc(n*m,n*m,size(all_list,1)*5);
+  end
+  
+  % 2nd partials on column index
+  L = find((all_list(:,3) > 1) & (all_list(:,3) < m)); 
+  nl=length(L);
+  if nl>0
+    fda=fda+sparse(repmat(all_list(L,1),1,3), ...
+      repmat(all_list(L,1),1,3)+repmat([-n 0 n],nl,1), ...
+      repmat([1 -2 1],nl,1),nm,nm);
+  end
+  
+  % eliminate knowns
+  rhs=-fda(:,known_list)*A(known_list);
+  k=find(any(fda(:,nan_list(:,1)),2));
+  
+  % and solve...
+  B=A;
+  B(nan_list(:,1))=fda(k,nan_list(:,1))\rhs(k);
+  
+ case 1
+  % least squares approach with del^2. Build system
+  % for every array element as an unknown, and then
+  % eliminate those which are knowns.
+
+  % Build sparse matrix approximating del^2 for
+  % every element in A.
+  % Compute finite difference for second partials
+  % on row variable first
+  [i,j]=ndgrid(2:(n-1),1:m);
+  ind=i(:)+(j(:)-1)*n;
+  np=(n-2)*m;
+  fda=sparse(repmat(ind,1,3),[ind-1,ind,ind+1], ...
+      repmat([1 -2 1],np,1),n*m,n*m);
+  
+  % now second partials on column variable
+  [i,j]=ndgrid(1:n,2:(m-1));
+  ind=i(:)+(j(:)-1)*n;
+  np=n*(m-2);
+  fda=fda+sparse(repmat(ind,1,3),[ind-n,ind,ind+n], ...
+      repmat([1 -2 1],np,1),nm,nm);
+  
+  % eliminate knowns
+  rhs=-fda(:,known_list)*A(known_list);
+  k=find(any(fda(:,nan_list),2));
+  
+  % and solve...
+  B=A;
+  B(nan_list(:,1))=fda(k,nan_list(:,1))\rhs(k);
+  
+ case 2
+  % Direct solve for del^2 BVP across holes
+
+  % generate sparse array with second partials on row
+  % variable for each nan element, only for those nodes
+  % which have a row index > 1 or < n
+  L = find((nan_list(:,2) > 1) & (nan_list(:,2) < n)); 
+  nl=length(L);
+  if nl>0
+    fda=sparse(repmat(nan_list(L,1),1,3), ...
+      repmat(nan_list(L,1),1,3)+repmat([-1 0 1],nl,1), ...
+      repmat([1 -2 1],nl,1),n*m,n*m);
+  else
+    fda=spalloc(n*m,n*m,size(nan_list,1)*5);
+  end
+  
+  % 2nd partials on column index
+  L = find((nan_list(:,3) > 1) & (nan_list(:,3) < m)); 
+  nl=length(L);
+  if nl>0
+    fda=fda+sparse(repmat(nan_list(L,1),1,3), ...
+      repmat(nan_list(L,1),1,3)+repmat([-n 0 n],nl,1), ...
+      repmat([1 -2 1],nl,1),n*m,n*m);
+  end
+  
+  % fix boundary conditions at extreme corners
+  % of the array in case there were nans there
+  if ismember(1,nan_list(:,1))
+    fda(1,[1 2 n+1])=[-2 1 1];
+  end
+  if ismember(n,nan_list(:,1))
+    fda(n,[n, n-1,n+n])=[-2 1 1];
+  end
+  if ismember(nm-n+1,nan_list(:,1))
+    fda(nm-n+1,[nm-n+1,nm-n+2,nm-n])=[-2 1 1];
+  end
+  if ismember(nm,nan_list(:,1))
+    fda(nm,[nm,nm-1,nm-n])=[-2 1 1];
+  end
+  
+  % eliminate knowns
+  rhs=-fda(:,known_list)*A(known_list);
+  
+  % and solve...
+  B=A;
+  k=nan_list(:,1);
+  B(k)=fda(k,k)\rhs(k);
+  
+ case 3
+  % The same as method == 0, except uses del^4 as the
+  % interpolating operator.
+  
+  % del^4 template of neighbors
+  talks_to = [-2 0;-1 -1;-1 0;-1 1;0 -2;0 -1; ...
+      0 1;0 2;1 -1;1 0;1 1;2 0];
+  neighbors_list=identify_neighbors(n,m,nan_list,talks_to);
+  
+  % list of all nodes we have identified
+  all_list=[nan_list;neighbors_list];
+  
+  % generate sparse array with del^4, but only
+  % for those nodes which have a row & column index
+  % >= 3 or <= n-2
+  L = find( (all_list(:,2) >= 3) & ...
+            (all_list(:,2) <= (n-2)) & ...
+            (all_list(:,3) >= 3) & ...
+            (all_list(:,3) <= (m-2)));
+  nl=length(L);
+  if nl>0
+    % do the entire template at once
+    fda=sparse(repmat(all_list(L,1),1,13), ...
+        repmat(all_list(L,1),1,13) + ...
+        repmat([-2*n,-n-1,-n,-n+1,-2,-1,0,1,2,n-1,n,n+1,2*n],nl,1), ...
+        repmat([1 2 -8 2 1 -8 20 -8 1 2 -8 2 1],nl,1),nm,nm);
+  else
+    fda=spalloc(n*m,n*m,size(all_list,1)*5);
+  end
+  
+  % on the boundaries, reduce the order around the edges
+  L = find((((all_list(:,2) == 2) | ...
+             (all_list(:,2) == (n-1))) & ...
+            (all_list(:,3) >= 2) & ...
+            (all_list(:,3) <= (m-1))) | ...
+           (((all_list(:,3) == 2) | ...
+             (all_list(:,3) == (m-1))) & ...
+            (all_list(:,2) >= 2) & ...
+            (all_list(:,2) <= (n-1))));
+  nl=length(L);
+  if nl>0
+    fda=fda+sparse(repmat(all_list(L,1),1,5), ...
+      repmat(all_list(L,1),1,5) + ...
+        repmat([-n,-1,0,+1,n],nl,1), ...
+      repmat([1 1 -4 1 1],nl,1),nm,nm);
+  end
+  
+  L = find( ((all_list(:,2) == 1) | ...
+             (all_list(:,2) == n)) & ...
+            (all_list(:,3) >= 2) & ...
+            (all_list(:,3) <= (m-1)));
+  nl=length(L);
+  if nl>0
+    fda=fda+sparse(repmat(all_list(L,1),1,3), ...
+      repmat(all_list(L,1),1,3) + ...
+        repmat([-n,0,n],nl,1), ...
+      repmat([1 -2 1],nl,1),nm,nm);
+  end
+  
+  L = find( ((all_list(:,3) == 1) | ...
+             (all_list(:,3) == m)) & ...
+            (all_list(:,2) >= 2) & ...
+            (all_list(:,2) <= (n-1)));
+  nl=length(L);
+  if nl>0
+    fda=fda+sparse(repmat(all_list(L,1),1,3), ...
+      repmat(all_list(L,1),1,3) + ...
+        repmat([-1,0,1],nl,1), ...
+      repmat([1 -2 1],nl,1),nm,nm);
+  end
+  
+  % eliminate knowns
+  rhs=-fda(:,known_list)*A(known_list);
+  k=find(any(fda(:,nan_list(:,1)),2));
+  
+  % and solve...
+  B=A;
+  B(nan_list(:,1))=fda(k,nan_list(:,1))\rhs(k);
+  
+ case 4
+  % Spring analogy
+  % interpolating operator.
+  
+  % list of all springs between a node and a horizontal
+  % or vertical neighbor
+  hv_list=[-1 -1 0;1 1 0;-n 0 -1;n 0 1];
+  hv_springs=[];
+  for i=1:4
+    hvs=nan_list+repmat(hv_list(i,:),nan_count,1);
+    k=(hvs(:,2)>=1) & (hvs(:,2)<=n) & (hvs(:,3)>=1) & (hvs(:,3)<=m);
+    hv_springs=[hv_springs;[nan_list(k,1),hvs(k,1)]];
+  end
+
+  % delete replicate springs
+  hv_springs=unique(sort(hv_springs,2),'rows');
+  
+  % build sparse matrix of connections, springs
+  % connecting diagonal neighbors are weaker than
+  % the horizontal and vertical springs
+  nhv=size(hv_springs,1);
+  springs=sparse(repmat((1:nhv)',1,2),hv_springs, ...
+     repmat([1 -1],nhv,1),nhv,nm);
+  
+  % eliminate knowns
+  rhs=-springs(:,known_list)*A(known_list);
+  
+  % and solve...
+  B=A;
+  B(nan_list(:,1))=springs(:,nan_list(:,1))\rhs;
+  
+ case 5
+  % Average of 8 nearest neighbors
+  
+  % generate sparse array to average 8 nearest neighbors
+  % for each nan element, be careful around edges
+  fda=spalloc(n*m,n*m,size(nan_list,1)*9);
+  
+  % -1,-1
+  L = find((nan_list(:,2) > 1) & (nan_list(:,3) > 1)); 
+  nl=length(L);
+  if nl>0
+    fda=fda+sparse(repmat(nan_list(L,1),1,2), ...
+      repmat(nan_list(L,1),1,2)+repmat([-n-1, 0],nl,1), ...
+      repmat([1 -1],nl,1),n*m,n*m);
+  end
+  
+  % 0,-1
+  L = find(nan_list(:,3) > 1);
+  nl=length(L);
+  if nl>0
+    fda=fda+sparse(repmat(nan_list(L,1),1,2), ...
+      repmat(nan_list(L,1),1,2)+repmat([-n, 0],nl,1), ...
+      repmat([1 -1],nl,1),n*m,n*m);
+  end
+
+  % +1,-1
+  L = find((nan_list(:,2) < n) & (nan_list(:,3) > 1));
+  nl=length(L);
+  if nl>0
+    fda=fda+sparse(repmat(nan_list(L,1),1,2), ...
+      repmat(nan_list(L,1),1,2)+repmat([-n+1, 0],nl,1), ...
+      repmat([1 -1],nl,1),n*m,n*m);
+  end
+
+  % -1,0
+  L = find(nan_list(:,2) > 1);
+  nl=length(L);
+  if nl>0
+    fda=fda+sparse(repmat(nan_list(L,1),1,2), ...
+      repmat(nan_list(L,1),1,2)+repmat([-1, 0],nl,1), ...
+      repmat([1 -1],nl,1),n*m,n*m);
+  end
+
+  % +1,0
+  L = find(nan_list(:,2) < n);
+  nl=length(L);
+  if nl>0
+    fda=fda+sparse(repmat(nan_list(L,1),1,2), ...
+      repmat(nan_list(L,1),1,2)+repmat([1, 0],nl,1), ...
+      repmat([1 -1],nl,1),n*m,n*m);
+  end
+
+  % -1,+1
+  L = find((nan_list(:,2) > 1) & (nan_list(:,3) < m)); 
+  nl=length(L);
+  if nl>0
+    fda=fda+sparse(repmat(nan_list(L,1),1,2), ...
+      repmat(nan_list(L,1),1,2)+repmat([n-1, 0],nl,1), ...
+      repmat([1 -1],nl,1),n*m,n*m);
+  end
+  
+  % 0,+1
+  L = find(nan_list(:,3) < m);
+  nl=length(L);
+  if nl>0
+    fda=fda+sparse(repmat(nan_list(L,1),1,2), ...
+      repmat(nan_list(L,1),1,2)+repmat([n, 0],nl,1), ...
+      repmat([1 -1],nl,1),n*m,n*m);
+  end
+
+  % +1,+1
+  L = find((nan_list(:,2) < n) & (nan_list(:,3) < m));
+  nl=length(L);
+  if nl>0
+    fda=fda+sparse(repmat(nan_list(L,1),1,2), ...
+      repmat(nan_list(L,1),1,2)+repmat([n+1, 0],nl,1), ...
+      repmat([1 -1],nl,1),n*m,n*m);
+  end
+  
+  % eliminate knowns
+  rhs=-fda(:,known_list)*A(known_list);
+  
+  % and solve...
+  B=A;
+  k=nan_list(:,1);
+  B(k)=fda(k,k)\rhs(k);
+  
+end
+
+% all done, make sure that B is the same shape as
+% A was when we came in.
+B=reshape(B,n,m);
+end

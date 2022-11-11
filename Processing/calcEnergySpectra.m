@@ -26,9 +26,9 @@ function frameEnergySpectra = calcEnergySpectra(frame, num)
 
     for ii = 1:numk
         in = k_ind(round(num_step*ii*(ii-1)/2+1):round(num_step*ii*(ii+1)/2));
+        k(ii) = mean(kr(in));
 
         Ek(ii) = 1/2/Lx/Ly/kstep*sum(abs(2*E(in)))*dkx*dky; % intergal!
-        k(ii) = mean(kr(in));
     
     end
     frameEnergySpectra.Ek = Ek;

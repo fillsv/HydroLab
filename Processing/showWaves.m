@@ -18,14 +18,16 @@ function showWaves(frame, nyuCrop, num)
 
     px = frame.px;
     py = frame.py;
+    Lx = frame.Lx;
+    Ly = frame.Ly;
     
     rez = abs(abs(frame.vox)+i*abs(frame.voy));
     pr_right = 14;
     pr_top = 12;  
-    surf(px, py , rez, 'LineStyle', 'None');
+    surf(px-Lx/2, py-Ly/2, rez, 'LineStyle', 'None');
     view(2);
-    xlim([px(1) px(end)]);
-    ylim([py(1) py(end)]);
+    xlim([px(1) px(end)]-Lx/2);
+    ylim([py(1) py(end)]-Ly/2);
     set(gca, 'fontsize', 15);
     xlabel('x, cm', 'fontsize', 15);
     ylabel('y, cm', 'fontsize', 15);  
@@ -39,4 +41,5 @@ function showWaves(frame, nyuCrop, num)
     xboundary = max(abs([xmin xmax]));
     caxis([0 xboundary(1)] );
     colorbar( 'fontsize', 15);
+    title(nyuCrop)
     set(gcf, 'PaperPosition', [0, 0, pr_right, pr_top]);

@@ -8,16 +8,19 @@ function frameFFTVort = calcVortFFT(frame, padFactor, num)
     if exist('num', 'var')==0 
         num = 1:numel(frame.px);
     end    
-
-    frameOmega = calcVort(frame, num);
+    if ~isfield(frame, 'omega')
+        frameOmega = calcVort(frame, num);
+    else
+        frameOmega = frame;
+    end
 
     if(exist('padFactor', 'var')==0) 
         padFactor=4; 
     end
     dt = 1/frame.freq;
 
-    px = frameOmega.px{1};
-    py = frameOmega.py{1};    
+    px = frameOmega.px{num(1)};
+    py = frameOmega.py{num(1)};    
     [npy, npx] = size(px);
 
 
@@ -31,7 +34,7 @@ function frameFFTVort = calcVortFFT(frame, padFactor, num)
     frameFFTVort.padFactor = padFactor;
     
     w = window(@hann, npy)*window(@hann, npx)';
-    omega = cat(3, frameOmega.omega{:});
+    omega = cat(3, frameOmega.omega{num});
     omega(find(isnan(omega))) = 0;
 
     [ox oy ot] = size(omega);

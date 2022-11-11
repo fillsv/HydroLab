@@ -1,5 +1,5 @@
 function frame = showVort(frame, num)
-    cutoff_percent = 0.01;
+    cutoff_percent = 0.003;
     if exist('frame', 'var')==0 
         disp('function frame = showVort(frame, num)');
         return

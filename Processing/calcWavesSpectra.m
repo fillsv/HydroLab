@@ -19,10 +19,10 @@ function frameWavesSpectra = calcWavesSpectra(frame, padFactor, num)
     
     [kx ky dkx dky] = genkxky(px, py, padFactor);
 
-    frameWavesSpectra.px = px;
-    frameWavesSpectra.py = py;    
-    frameWavesSpectra.kx = kx;
-    frameWavesSpectra.ky = ky;
+%     frameWavesSpectra.px = px;
+%     frameWavesSpectra.py = py;    
+%     frameWavesSpectra.kx = kx;
+%     frameWavesSpectra.ky = ky;
     frameWavesSpectra.Lx = frame.Lx;    
     frameWavesSpectra.Ly = frame.Ly;    
     frameWavesSpectra.freq = frame.freq;    
@@ -63,7 +63,7 @@ function frameWavesSpectra = calcWavesSpectra(frame, padFactor, num)
     fvx = 2*fvx; % fft(t)
     fvy = 2*fvy;
     fv = abs(fvx+i*fvy);
-    dk = dkx*padFactor*2;
+    dk = dkx*padFactor*2*1000;
     numelo= numel(fvx)/padFactor^2/padFactorTime;
     stept = round(padFactorTime*0);
     for ii = 1+stept:numel(nyu)-stept

@@ -1,5 +1,9 @@
 function [vsp nyu] = showWavesSpectra(frame, padFactor, num)
     %
+    if ~exist('frame', 'var')
+        disp('function showWavesSpectra(frame, padFactor, num)');
+        return
+    end    
     if exist('padFactor', 'var')==0 
         padFactor = 4;
     end 
@@ -15,7 +19,7 @@ function [vsp nyu] = showWavesSpectra(frame, padFactor, num)
     end    
     vsp = frame.vsp;
     nyu = frame.nyu;
-    plot(frame.nyu, frame.vsp);
+    semilogy(frame.nyu, frame.vsp);
 %     plot(frame.nyu, frame.vsp./disper(frame.nyu)', 'b');
     xlabel('Frequency, Hz');
     ylabel('RMS velocity, cm/s');

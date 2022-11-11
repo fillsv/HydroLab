@@ -21,17 +21,24 @@ function createInfoMulti(param)
         eval(param)
     end
     a = dir(pathm); a = a(3:end); a = a([a.isdir]);
-    for ii = 1:numel(a)
+    if ~exist('num', 'var') num = 1:numel(a); end
+    for ii = num
         pp = 0;
 
         path1 = [a(ii).folder filesep a(ii).name filesep];
         disp(path1)
         [ nb] = numelmat(ii);
         for kk = 1:nb
+            disp(kk)
             if nameMat(ii,kk,pathm) == -1 
                 continue;
             end
-            load(nameMat(ii,kk,pathm), 'x');
+            s = load(nameMat(ii,kk,pathm), 'x');
+            if ~isfield(s, 'x')
+                fileInfo = whos('-file', nameMat(ii,kk,pathm));
+            else
+                fileInfo(1).size = size(s.x);
+            end
             for varName = varNames
                 varName = varName{1};
                 if exist(varName,'var')
@@ -43,9 +50,10 @@ function createInfoMulti(param)
     %             matInfo.Ly = Ly;
             matInfo.tv_threshold = tv_threshold; 
             matInfo.tt = [];
-            for jj = 1:numel(x)
+            for jj = 1:max(fileInfo(1).size)
                 pp = pp + 1;
-                matInfo.tt(jj,1) = 180*(ii-1)+(pp-1)/freq;
+%                 matInfo.tt(jj,1) = 180*(ii-1)+(pp-1)/freq;
+                matInfo.tt(jj,1) = (pp-1)/freq;
             end
             tmp_name = namemat(ii, kk);
             ind = find(tmp_name == filesep);

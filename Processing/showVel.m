@@ -20,6 +20,7 @@ function showVel(frame, num)
     oVx = mean(oVx, 3);
     oVy = mean(oVy, 3);
     V = abs(oVx+i*oVy);
+%     V = oVy;
     pr_right = 14;
     pr_top = 12;  
     surf(px, py , V, 'LineStyle', 'None');

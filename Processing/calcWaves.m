@@ -51,8 +51,8 @@ function frameWaves = calcWaves(frame, padFactor, nyuCrop, num)
     w23 = hann(size(vx, 2))*hann(size(vx,3))'; 
     w1 = hann(size(vx,1));
     w = repmat(w1, [1, size(vx,2), size(vx,3)]);
-    vox = goertzel1(vx.*w, pp)/mean(w1);
-    voy = goertzel1(vy.*w, pp)/mean(w1);
+    vox = goertzel1(vx.*w, pp)/mean(w1)/size(vx,1);
+    voy = goertzel1(vy.*w, pp)/mean(w1)/size(vx,1);
 
     vox = 2*squeeze(vox);
     voy = 2*squeeze(voy);    
