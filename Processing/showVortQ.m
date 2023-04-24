@@ -1,4 +1,4 @@
-function frame = showVortQ(frame, num, mult)
+function frame = showVortQ(frame, num, mult, arrowParam)
     if exist('frame', 'var')==0 
         disp('function frame = showVortQ(frame, num, mult)');
         return
@@ -12,7 +12,10 @@ function frame = showVortQ(frame, num, mult)
     if exist('mult', 'var')==0 
         mult = 4;
     end
+    if exist('arrowParam', 'var')==0 
+        arrowParam = [];
+    end
     showVort(frame, num);
     hold on;
-    showVelQ(frame, num, mult);
+    showVelQ(frame, num, mult, 1, arrowParam);
     hold off;

@@ -43,13 +43,13 @@ function [frameCoh, frameIncoh] = calcCoh_Incoh(frameOmega, num, keep, deep, wav
         
 %         frameCoh.omega{ii} = BB(1:209, 1:209);
 %         frameIncoh.omega{ii} = omega - BB(1:209, 1:209);
-        frameCoh.omega{ii} = BB;
-        frameIncoh.omega{ii} = omega - BB;
+        frameCoh.omega{ii,1} = BB;
+        frameIncoh.omega{ii,1} = omega - BB;
         
-        frameCoh.px{ii} = px;
-        frameCoh.py{ii} = py;
-        frameIncoh.px{ii} = px;
-        frameIncoh.py{ii} = py;
+        frameCoh.px{ii,1} = px;
+        frameCoh.py{ii,1} = py;
+        frameIncoh.px{ii,1} = px;
+        frameIncoh.py{ii,1} = py;
 
     end
     frameCoh.tt(1:numel(num)) = frameOmega.tt(num);

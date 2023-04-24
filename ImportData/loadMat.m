@@ -23,26 +23,22 @@ function frame = loadMat(num, nn, pathm, numres)
     if nameInfoFile == -1; frame = []; return; end
     load(nameMatFile)
     load(nameInfoFile)
-    if ~exist('numres', 'var')
-        numres = numel(results{1}.x);
-    end
-    frame = [];
     if exist('results', 'var')
-        
-        for ii = 1:numel(results)
-%             disp(ii)
-            res = filterResults(results{ii},10);
-%             res = results{ii};
-            x{ii} = res.x{numres};
-            y{ii} = res.y{numres};
-            u{ii} = res.u{numres};    
-            v{ii} = res.v{numres};    
-%             x{ii} = res.x{3};
-%             y{ii} = res.y{3};
-%             u{ii} = res.u{3};    
-%             v{ii} = res.v{3};    
-        end 
-    end
+        if ~exist('numres', 'var')
+            numres = numel(results{1}.x);
+        end
+        frame = [];
+        if exist('results', 'var')
+            for ii = 1:numel(results)
+%                 res = filterResults(results{ii},10);
+                res = results{ii};
+                x{ii} = res.x{numres};
+                y{ii} = res.y{numres};
+                u{ii} = res.u{numres};    
+                v{ii} = res.v{numres};    
+            end 
+        end
+    end    
     if exist('u', 'var')
         frame = importMat(x,y,u,v, matInfo);
     end

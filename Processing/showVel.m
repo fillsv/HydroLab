@@ -1,21 +1,26 @@
-function showVel(frame, num)
+function showVel(frame, num, center)
     cutoff_percent = 0.01;
 
     if ~exist('frame', 'var')
-        disp('function showVel(frame, num)');
+        disp('function showVel(frame, num, center)');
         return
     end
     
     if exist('num', 'var')==0 
         num = 1:numel(frame.px);
-    end    
+    end  
+    if exist('center', 'var')==0 
+        center = 1;
+    end 
       
     oVx = nanmean(cat(3, frame.vx{num}),3);
     oVy = nanmean(cat(3, frame.vy{num}),3);
     px = frame.px{num(1)};
     py = frame.py{num(1)};
-    px = px - mean(px(:));
-    py = py - mean(py(:));
+    if center
+        px = px - mean(px(:));
+        py = py - mean(py(:));
+    end
 
     oVx = mean(oVx, 3);
     oVy = mean(oVy, 3);

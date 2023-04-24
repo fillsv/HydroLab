@@ -1,4 +1,4 @@
-function showEnergySpectra(frame, padFactor, num, color)
+function frame = showEnergySpectra(frame, padFactor, num, color)
     %
     if ~exist('frame', 'var')
         disp('showEnergySpectra(frame, padFactor, num)');
@@ -20,7 +20,7 @@ function showEnergySpectra(frame, padFactor, num, color)
             if exist('num', 'var')==0 
                 num = 1:numel(frame.E);
             end 
-            frame = calcEnergySpectra(frame, num)
+            frame = calcEnergySpectra(frame, num);
         end
     end    
     if (~isfield(frame, 'Ek'))||(~isfield(frame, 'k'))

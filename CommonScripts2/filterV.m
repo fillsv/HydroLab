@@ -10,10 +10,17 @@ function [vx, vy] = filterV(vx, vy, filterLimit)
 %      surf(dv,'linestyle','none'); view(2)
 %      pause(1)
 %      return
-    [indy indx] = find(abs(dv)>nanmean(abs(dv))*filterLimit);
-%     [indy indx] = find(abs(absv)>nanmean(abs(absv))*filterLimit);
-%     [ind] = find(absv(:)>nanmean(absv(:))*filterLimit);
-    ind = (indx-1)*size(vx,1)+indy;
+%     [indy indx] = find(abs(dv)>nanmean(abs(dv))*filterLimit);
+%     [indy indx] = find(abs(dv)>nanmean(abs(dv))*filterLimit);
+%    [indy indx] = find(abs(absv)>nanmean(abs(absv))*filterLimit);
+    ind = find(absv(:)>nanmean(absv(:))*filterLimit);
+%    ind = (indx-1)*size(vx,1)+indy;
+%     vx(ind) = NaN;
+%     vy(ind) = NaN;
+%     [indy indx] = find(abs(dv1)>nanmean(abs(dv1))*filterLimit);
+%    [indy indx] = find(abs(absv)>nanmean(abs(absv))*filterLimit);
+%     ind = find(absv(:)>nanmean(absv(:))*filterLimit);
+%    ind = indx*size(vx,1)+indy-1;
     vx(ind) = NaN;
     vy(ind) = NaN;
 

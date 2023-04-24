@@ -1,7 +1,7 @@
-function frame = showVort(frame, num)
+function frame = showVort(frame, num, center)
     cutoff_percent = 0.003;
     if exist('frame', 'var')==0 
-        disp('function frame = showVort(frame, num)');
+        disp('function frame = showVort(frame, num, center)');
         return
     end
     if ~isfield(frame, 'omega')
@@ -15,15 +15,23 @@ function frame = showVort(frame, num)
             warning('frame is incorrect!')
             return
         end
-    end    
+    end 
+    if exist('center', 'var')==0 
+        center = 1;
+    end
     
     if exist('num', 'var')==0 
         num = 1:numel(frame.px);
     end
     px = frame.px{1};%(1:end-1, 1:end-1);
     py = frame.py{1};%(1:end-1, 1:end-1);
-    px = px - mean(px(:));
-    py = py - mean(py(:));    
+%     px = px - mean(px(:));
+%     py = py - mean(py(:));
+    if center
+        px = px - mean(px(:));
+        py = py - mean(py(:));
+    end
+
     omega = cat(3, frame.omega{num});
     omega = nanmean(omega, 3);    
 %     omega = abs(omega);

@@ -1,6 +1,6 @@
-function frame = showVortS(frame, num, mult)
+function frame = showVortS(frame, num, zoom, mult)
     if exist('frame', 'var')==0 
-        disp('function frame = showVortQ(frame, num, mult)');
+        disp('function frame = showVortQ(frame, num, zoom, mult)');
         return
     end
     if ~exist('zoom', 'var')

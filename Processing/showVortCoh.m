@@ -18,7 +18,9 @@ function frame = showVortCoh(frame, num, keep, deep, wavelette)
     end
     
     clf;
+    
     frameOmega = calcVort(frame,num);
+    
     num = 1:numel(frameOmega.px);
     [frameCoh] = calcCoh_Incoh(frameOmega, num, keep, deep, wavelette );
     showVort(frameCoh, num);

@@ -10,7 +10,7 @@ function frame = importMat(x,y,u,v,matInfo, tv, num)
     py = py - py(1, 1) + (py(2, 1) - py(1, 1));
     maxpx = max(px(:));
     maxpy = max(py(:));
-    filterLimit = 6;
+    filterLimit = 4;
     px = px*Lx/maxpx;
     py = py*Ly/maxpy;
     if(exist('num', 'var') == 0)
@@ -62,3 +62,4 @@ function frame = importMat(x,y,u,v,matInfo, tv, num)
     frame.h = matInfo.h;
     frame.n = matInfo.n;
     frame.sigma = matInfo.sigma;
+end
