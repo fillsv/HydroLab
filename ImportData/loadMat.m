@@ -7,15 +7,15 @@ function frame = loadMat(num, nn, pathm, numres)
 
 
     if exist('pathm', 'var')
-        nameMatFile = nameMat(num, nn, pathm);
-        nameInfoFile = nameInfo(num, nn, pathm);
+        nameMatFile = nameMatCam(num, nn, pathm);
+        nameInfoFile = nameInfoCam(num, nn, pathm);
     else
         if exist('nn', 'var')
-            nameMatFile = nameMat(num, nn);
-            nameInfoFile = nameInfo(num, nn);
+            nameMatFile = nameMatCam(num, nn);
+            nameInfoFile = nameInfoCam(num, nn);
         else
-            nameMatFile = nameMat(num);
-            nameInfoFile = nameInfo(num);
+            nameMatFile = nameMatCam(num);
+            nameInfoFile = nameInfoCam(num);
         end
     end
     
